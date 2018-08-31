@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+    <title>Directives scopes</title>
+
+    <script src="../Libraries/angular.js"></script>
+    <link href="../Libraries/bootstrap-theme.css" rel="stylesheet" />
+    <link href="../Libraries/bootstrap.css" rel="stylesheet" />
+
+    <script type="text/ng-template" id="customTemplate">
+        <div class="panel panel-success">
+            <!-- Каждый scope будет иметь свое значение для свойства defaultCaption -->
+            <div class="panel-heading">{{defaultCaption}}</div>
+            <div class="panel-body">Create caption : <input ng-model="defaultCaption" /></div>
+
+            <!-- Используется общий объект для всех scope -->
+            <!--<div class="panel-heading">{{data.caption}}</div>
+            <div class="panel-body">Create caption : <input ng-model="data.caption" /></div>-->
+        </div>
+    </script>
+    <script>
+        angular.module("exampleApp", [])
+        .directive("scopeExample", function () {
+            return {
+                template: function () {
+                    return angular.element(document.querySelector("#customTemplate")).html();
+                },
+                scope: true // каждый экземпляр директивы должен работать со своим scope и наследовать scope своего контроллера
+            }
+        })
+        .controller("defaultCtrl", function ($scope) {
+            $scope.defaultCaption = "Caption"; // каждый scope содержит свое значение для свойства defaultCaption
+            $scope.data = { caption: "Caption" }; // все scope будут использовать один объект data
+        });
+    </script>
+</head>
+<body>
+    <div ng-controller="defaultCtrl" class="panel panel-primary">
+        <div class="panel-body" scope-example></div>
+        <div class="panel-body" scope-example></div>
+    </div>
+</body>
+</html>
